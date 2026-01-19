@@ -1,0 +1,76 @@
+class Buffer {
+    private int data;
+    private boolean isEmpty = true;
+
+    // Producer puts data
+    public synchronized void produce(int value) throws InterruptedException {
+        while (!isEmpty) {
+            wait();  // wait until buffer becomes empty
+        }
+        data = value;
+        System.out.println("Produced: " + value);
+        isEmpty = false;
+        notify();  // notify consumer
+    }
+
+    // Consumer gets data
+    public synchronized int consume() throws InterruptedException {
+        while (isEmpty) {
+            wait();  // wait until producer produces data
+        }
+        System.out.println("Consumed: " + data);
+        isEmpty = true;
+        notify(); // notify producer
+        return data;
+    }
+}
+
+class Producer extends Thread {
+    Buffer buffer;
+
+    Producer(Buffer buffer) {
+        this.buffer = buffer;
+    }
+
+    public void run() {
+        for (int i = 1; i <= 5; i++) {
+            try {
+                buffer.produce(i);
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+class Consumer extends Thread {
+    Buffer buffer;
+
+    Consumer(Buffer buffer) {
+        this.buffer = buffer;
+    }
+
+    public void run() {
+        for (int i = 1; i <= 5; i++) {
+            try {
+                buffer.consume();
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+public class ProducerConsumerDemo {
+    public static void main(String[] args) {
+        Buffer buffer = new Buffer();
+
+        Producer producer = new Producer(buffer);
+        Consumer consumer = new Consumer(buffer);
+
+        producer.start();
+        consumer.start();
+    }
+}
