@@ -1,0 +1,21 @@
+import java.applet.Applet;
+import java.awt.Frame;
+import java.awt.Graphics;
+
+public class SimpleMessage extends Applet {
+
+    public void paint(Graphics g) {
+        g.drawString("Hello! this is a simple Applet message", 50, 100);
+    }
+
+    public static void main(String[] args) {
+        Frame frame = new Frame("Applet in Frame");
+        SimpleMessage applet = new SimpleMessage();
+        applet.init();
+        frame.add(applet);
+        frame.setSize(400, 300);
+        frame.setVisible(true);
+        applet.start();
+        applet.stop();
+    }
+}
