@@ -1,0 +1,32 @@
+import java.applet.Applet;
+import java.awt.Frame;
+import java.awt.Graphics;
+
+public class FactorialApplet extends Applet {
+
+    int num = 6;
+
+    int factorial(int n) {
+        int f = 1;
+        for (int i = 1; i <= n; i++) {
+            f = f * i;
+        }
+        return f;
+    }
+
+    public void paint(Graphics g) {
+        int result = factorial(num);
+        g.drawString("Number: " + num, 60, 80);
+        g.drawString("Factorial: " + result, 60, 120);
+    }
+
+    public static void main(String[] args) {
+        Frame frame = new Frame("Factorial Applet in Frame");
+        FactorialApplet applet = new FactorialApplet();
+        applet.init();
+        frame.add(applet);
+        frame.setSize(400, 300);
+        frame.setVisible(true);
+        applet.start();
+    }
+}
